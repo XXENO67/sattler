@@ -3,9 +3,7 @@ import react from '@vitejs/plugin-react'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-
 const root = path.dirname(fileURLToPath(import.meta.url))
-
 function mimeFor(file) {
   const ext = path.extname(file).toLowerCase()
   if (ext === '.png') return 'image/png'
@@ -14,8 +12,6 @@ function mimeFor(file) {
   if (ext === '.svg') return 'image/svg+xml'
   return 'application/octet-stream'
 }
-
-/** Serve original folders in place — no copied frames, no second sequence. */
 function serveFolder(urlPrefix, dir) {
   const resolved = path.resolve(dir)
   return {
@@ -36,8 +32,8 @@ function serveFolder(urlPrefix, dir) {
     },
   }
 }
-
 export default defineConfig({
+  base: '/sattler/',
   plugins: [
     react(),
     serveFolder('/frames/', path.join(root, 'frames')),
