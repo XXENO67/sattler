@@ -315,10 +315,13 @@ export default function CarHero() {
             scrollTrigger: {
               trigger: sectionRef.current,
               start: 'top top',
-              end: () => `+=${Math.round(window.innerHeight * (isMobile ? 1.35 : 2.5))}`,
-              pin: true,
-              pinSpacing: true,
-              anticipatePin: 1,
+              end: () =>
+                isMobile
+                  ? 'bottom top'
+                  : `+=${Math.round(window.innerHeight * 2.5)}`,
+              pin: !isMobile,
+              pinSpacing: !isMobile,
+              anticipatePin: isMobile ? 0 : 1,
               scrub: isMobile ? 0.16 : 0.2,
               invalidateOnRefresh: true,
               onUpdate: (self) => {
@@ -379,8 +382,24 @@ export default function CarHero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative w-full overflow-hidden bg-[#080808] pt-[4.75rem] md:h-[100svh] md:pt-0"
+      className="relative flex w-full flex-col overflow-hidden bg-[#080808] pt-[4.75rem] md:block md:h-[100svh] md:pt-0"
     >
+      <p className="sr-only">
+        Animierter schwarzer Sportwagen, der sich in einer technischen Explosionsansicht zerlegt und
+        anschließend präzise wieder zusammenfügt.
+      </p>
+
+      <div
+        ref={heroTextRef}
+        className="relative z-[5] mx-auto flex w-[min(94vw,1100px)] flex-col items-center px-4 pb-3 pt-2 text-center md:absolute md:left-1/2 md:top-[clamp(90px,11svh,145px)] md:-translate-x-1/2 md:px-6 md:pb-0 md:pt-0"
+        style={{
+          willChange: 'transform, opacity, filter',
+          textShadow: '0 3px 24px rgba(0, 0, 0, 0.9)',
+        }}
+      >
+        <HeroCopy />
+      </div>
+
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#080808] md:absolute md:inset-0 md:aspect-auto">
         <img
           src={frameUrl(0)}
@@ -395,22 +414,6 @@ export default function CarHero() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.08)_42%,rgba(0,0,0,0.04)_74%,rgba(0,0,0,0.5)_100%)] md:block"
         />
-      </div>
-
-      <p className="sr-only">
-        Animierter schwarzer Sportwagen, der sich in einer technischen Explosionsansicht zerlegt und
-        anschließend präzise wieder zusammenfügt.
-      </p>
-
-      <div
-        ref={heroTextRef}
-        className="relative z-[5] mx-auto flex w-[min(94vw,1100px)] flex-col items-center px-4 pb-8 pt-5 text-center md:absolute md:left-1/2 md:top-[clamp(90px,11svh,145px)] md:-translate-x-1/2 md:px-6 md:pb-0 md:pt-0"
-        style={{
-          willChange: 'transform, opacity, filter',
-          textShadow: '0 3px 24px rgba(0, 0, 0, 0.9)',
-        }}
-      >
-        <HeroCopy />
       </div>
 
       <div className="absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-[5] hidden -translate-x-1/2 md:block">
