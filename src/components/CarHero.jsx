@@ -14,7 +14,7 @@ const STUDIO = '#080808'
 
 const frameUrl = (frame) => {
   const number = String(frame + 1).padStart(4, '0')
-  return `/frames/frame_${number}.png`
+  return `/sattler/frames/frame_${number}.png`
 }
 
 function drawCover(canvas, image) {
@@ -355,7 +355,7 @@ export default function CarHero() {
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1]">
         <img
-          src="/frames/frame_0001.png"
+          src="/sattler/frames/frame_0001.png"
           alt=""
           fetchpriority="high"
           loading="eager"
