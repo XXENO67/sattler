@@ -25,7 +25,7 @@ export default function Services() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section id="leistungen" className="relative scroll-mt-24 bg-ink-950 pt-5 pb-16 sm:py-24 lg:py-32">
+    <section id="leistungen" className="relative scroll-mt-24 bg-ink-950 pt-4 pb-16 sm:py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 32 }}

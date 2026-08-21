@@ -14,7 +14,7 @@ const STUDIO = '#080808'
 
 const frameUrl = (frame) => {
   const number = String(frame + 1).padStart(4, '0')
-  return `/sattler/frames/frame_${number}.png`
+  return `/frames/frame_${number}.png`
 }
 
 function drawCover(canvas, image, mode) {
