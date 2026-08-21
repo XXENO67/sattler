@@ -33,7 +33,7 @@ export default function Footer() {
           <div className="min-w-0 lg:col-span-5">
             <Link to="/" aria-label="Dellentechnik Sattler – zur Startseite" className="inline-flex">
               <img
-                src="/sattler/brand/logo.png"
+                src="/brand/logo.png"
                 alt="Dellentechnik Sattler"
                 width={196}
                 height={56}

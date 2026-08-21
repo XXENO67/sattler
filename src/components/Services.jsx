@@ -4,19 +4,19 @@ const SERVICES = [
   {
     title: 'Drücktechnik',
     desc: 'Dellen werden von innen kontrolliert herausgedrückt. Der Originallack bleibt vollständig erhalten.',
-    img: '/sattler/brand/druecktechnik.jpg',
+    img: '/brand/druecktechnik.jpg',
     alt: 'Dellentechnik Sattler: Drücktechnik an einer schwarzen Fahrzeugtür',
   },
   {
     title: 'Klebe-Zieh-Technik',
     desc: 'Mit Klebetabs und Zugbrücke werden Dellen millimetergenau gezogen — ohne Bohren und ohne Spachtel.',
-    img: '/sattler/brand/klebe-zieh-technik.jpg',
+    img: '/brand/klebe-zieh-technik.jpg',
     alt: 'Klebe-Zieh-Technik mit Zugbrücke auf glänzend schwarzem Lack',
   },
   {
     title: 'Schlagmethode',
     desc: 'Gezieltes Arbeiten mit Gleithammer und Tabs, wenn Zug und Druck kombiniert die beste Korrektur ergeben.',
-    img: '/sattler/brand/schlagmethode.jpg',
+    img: '/brand/schlagmethode.jpg',
     alt: 'Schlagmethode mit Gleithammer an einem schwarzen Fahrzeugdach',
   },
 ]

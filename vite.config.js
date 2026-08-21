@@ -33,7 +33,7 @@ function serveFolder(urlPrefix, dir) {
   }
 }
 export default defineConfig({
-  base: '/sattler/',
+
   plugins: [
     react(),
     serveFolder('/frames/', path.join(root, 'frames')),

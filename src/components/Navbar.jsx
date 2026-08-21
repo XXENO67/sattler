@@ -113,7 +113,7 @@ export default function Navbar() {
             className={`flex shrink-0 items-center rounded-md ${focusRing}`}
           >
             <img
-              src="/sattler/brand/logo.png"
+              src="/brand/logo.png"
               alt="Dellentechnik Sattler"
               width={182}
               height={52}
@@ -194,7 +194,7 @@ export default function Navbar() {
           >
             <div className="flex items-center justify-between px-5 py-3">
               <img
-                src="/sattler/brand/logo.png"
+                src="/brand/logo.png"
                 alt="Dellentechnik Sattler"
                 width={182}
                 height={52}

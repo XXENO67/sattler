@@ -355,7 +355,7 @@ export default function CarHero() {
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1]">
         <img
-          src="/sattler/frames/frame_0001.png"
+          src="/frames/frame_0001.png"
           alt=""
           fetchpriority="high"
           loading="eager"
