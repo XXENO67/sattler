@@ -17,7 +17,7 @@ const frameUrl = (frame) => {
   return `/sattler/frames/frame_${number}.png`
 }
 
-function drawCover(canvas, image) {
+function drawCover(canvas, image, mode) {
   const rect = canvas.getBoundingClientRect()
   if (!rect.width || !rect.height) return
 
@@ -37,19 +37,15 @@ function drawCover(canvas, image) {
   const context = canvas.getContext('2d', { alpha: false, desynchronized: true })
   const sourceWidth = image.naturalWidth || SOURCE_SIZE.width
   const sourceHeight = image.naturalHeight || SOURCE_SIZE.height
-  const canvasAspect = width / height
-  const sourceAspect = sourceWidth / sourceHeight
-  const fitWidth = canvasAspect < sourceAspect
-  const scale = fitWidth
-    ? width / sourceWidth
-    : Math.max(width / sourceWidth, height / sourceHeight)
-  const drawWidth = fitWidth ? width : sourceWidth * scale
+
+  const scale =
+    mode === 'mobile'
+      ? width / sourceWidth
+      : Math.max(width / sourceWidth, height / sourceHeight)
+  const drawWidth = sourceWidth * scale
   const drawHeight = sourceHeight * scale
-  const drawX = fitWidth ? 0 : (width - drawWidth) / 2
-  const bottomGap = fitWidth ? Math.round(24 * (height / rect.height)) : 0
-  const drawY = fitWidth
-    ? Math.max(0, height - drawHeight - bottomGap)
-    : (height - drawHeight) / 2
+  const drawX = (width - drawWidth) / 2
+  const drawY = (height - drawHeight) / 2
 
   context.setTransform(1, 0, 0, 1, 0, 0)
   context.imageSmoothingEnabled = true
@@ -57,6 +53,33 @@ function drawCover(canvas, image) {
   context.fillStyle = STUDIO
   context.fillRect(0, 0, width, height)
   context.drawImage(image, drawX, drawY, drawWidth, drawHeight)
+}
+
+function HeroCopy() {
+  return (
+    <>
+      <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.22em] text-white/60 md:mb-4 md:text-[clamp(11px,0.8vw,15px)] md:tracking-[0.28em]">
+        Dellentechnik
+      </p>
+      <h1 className="font-heading font-black leading-[0.92] tracking-tight">
+        <span
+          className="block text-[clamp(36px,11vw,64px)] md:text-[clamp(54px,5vw,92px)]"
+          style={{ color: '#E10600' }}
+        >
+          SATTLER
+        </span>
+        <span className="mx-auto mt-3 block text-[12px] font-semibold uppercase leading-relaxed tracking-[0.1em] text-white/70 md:text-[clamp(12px,1vw,18px)] md:tracking-[0.14em]">
+          Präzise Dellenreparatur
+          <span className="hidden md:inline"> · </span>
+          <br className="md:hidden" />
+          ohne Lackieren
+        </span>
+      </h1>
+      <p className="mt-4 max-w-[22ch] text-center font-heading text-[15px] font-semibold leading-snug text-white sm:max-w-none md:text-[clamp(16px,1.4vw,24px)]">
+        Die Karosserie bleibt original. Das Ergebnis ist unsichtbar.
+      </p>
+    </>
+  )
 }
 
 export default function CarHero() {
@@ -97,7 +120,7 @@ export default function CarHero() {
     const drawFrame = (frame) => {
       const image = cache.get(frame)
       if (!image) return
-      drawCover(canvas, image)
+      drawCover(canvas, image, mode)
       displayedFrame = frame
     }
 
@@ -168,9 +191,10 @@ export default function CarHero() {
     }
 
     const warmFrames = (target, direction) => {
-      const offsets = direction >= 0
-        ? [1, 2, 3, 4, 5, 7, 10, 14, -1, -2]
-        : [-1, -2, -3, -4, -5, -7, -10, -14, 1, 2]
+      const offsets =
+        direction >= 0
+          ? [1, 2, 3, 4, 5, 7, 10, 14, -1, -2]
+          : [-1, -2, -3, -4, -5, -7, -10, -14, 1, 2]
 
       for (const offset of offsets) {
         const frame = target + offset
@@ -249,7 +273,6 @@ export default function CarHero() {
 
   useGSAP(
     () => {
-      gsap.set(heroTextRef.current, { autoAlpha: 0, y: 20, filter: 'blur(5px)' })
       const media = gsap.matchMedia()
 
       media.add(
@@ -273,21 +296,26 @@ export default function CarHero() {
           const introSequence = { frame: 0 }
           const sequence = { frame: INTRO_END_FRAME }
 
-          gsap.to(heroTextRef.current, {
-            autoAlpha: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: isMobile ? 0.85 : 1.05,
-            delay: isMobile ? 0.15 : 0.28,
-            ease: 'power2.out',
-          })
+          if (isMobile) {
+            gsap.set(heroTextRef.current, { autoAlpha: 1, y: 0, filter: 'blur(0px)' })
+          } else {
+            gsap.set(heroTextRef.current, { autoAlpha: 0, y: 20, filter: 'blur(5px)' })
+            gsap.to(heroTextRef.current, {
+              autoAlpha: 1,
+              y: 0,
+              filter: 'blur(0px)',
+              duration: 1.05,
+              delay: 0.28,
+              ease: 'power2.out',
+            })
+          }
 
           const timeline = gsap.timeline({
             defaults: { ease: 'none' },
             scrollTrigger: {
               trigger: sectionRef.current,
               start: 'top top',
-              end: () => `+=${Math.round(window.innerHeight * (isMobile ? 1.2 : 2.5))}`,
+              end: () => `+=${Math.round(window.innerHeight * (isMobile ? 1.35 : 2.5))}`,
               pin: true,
               pinSpacing: true,
               anticipatePin: 1,
@@ -351,18 +379,22 @@ export default function CarHero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative h-[calc(18.5rem+56.25vw)] w-full overflow-hidden bg-[#080808] md:h-[100svh]"
+      className="relative w-full overflow-hidden bg-[#080808] pt-[4.75rem] md:h-[100svh] md:pt-0"
     >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1]">
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#080808] md:absolute md:inset-0 md:aspect-auto">
         <img
-          src="/frames/frame_0001.png"
+          src={frameUrl(0)}
           alt=""
           fetchpriority="high"
           loading="eager"
           decoding="async"
-          className="absolute left-0 bottom-6 w-full max-w-none select-none md:bottom-auto md:top-1/2 md:-translate-y-1/2 [@media(min-aspect-ratio:16/9)]:inset-0 [@media(min-aspect-ratio:16/9)]:h-full [@media(min-aspect-ratio:16/9)]:translate-y-0 [@media(min-aspect-ratio:16/9)]:object-cover"
+          className="absolute inset-0 h-full w-full max-w-none select-none object-contain object-center md:object-cover"
         />
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full max-w-none" />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.08)_42%,rgba(0,0,0,0.04)_74%,rgba(0,0,0,0.5)_100%)] md:block"
+        />
       </div>
 
       <p className="sr-only">
@@ -371,40 +403,17 @@ export default function CarHero() {
       </p>
 
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(to_bottom,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.12)_32%,rgba(0,0,0,0.04)_62%,rgba(0,0,0,0.45)_100%)]"
-      />
-
-      <div className="pointer-events-none absolute left-1/2 top-[clamp(88px,14svh,132px)] z-[5] w-[min(94vw,1100px)] -translate-x-1/2 px-4 text-center md:top-[clamp(90px,11svh,145px)] md:px-6">
-        <div
-          ref={heroTextRef}
-          className="flex flex-col items-center"
-          style={{
-            willChange: 'transform, opacity, filter',
-            textShadow: '0 3px 24px rgba(0, 0, 0, 0.9)',
-          }}
-        >
-        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.22em] text-white/60 md:mb-4 md:text-[clamp(11px,0.8vw,15px)] md:tracking-[0.28em]">
-          Dellentechnik
-        </p>
-        <h1 className="font-heading font-black leading-[0.92] tracking-tight">
-          <span className="block text-[clamp(36px,11vw,64px)] md:text-[clamp(54px,5vw,92px)]" style={{ color: '#E10600' }}>
-            SATTLER
-          </span>
-          <span className="mx-auto mt-3 block text-[12px] font-semibold uppercase leading-relaxed tracking-[0.1em] text-white/70 md:text-[clamp(12px,1vw,18px)] md:tracking-[0.14em]">
-            Präzise Dellenreparatur
-            <span className="hidden md:inline"> · </span>
-            <br className="md:hidden" />
-            ohne Lackieren
-          </span>
-        </h1>
-        <p className="mt-4 max-w-[22ch] text-center font-heading text-[15px] font-semibold leading-snug text-white sm:max-w-none md:text-[clamp(16px,1.4vw,24px)]">
-          Die Karosserie bleibt original. Das Ergebnis ist unsichtbar.
-        </p>
-        </div>
+        ref={heroTextRef}
+        className="relative z-[5] mx-auto flex w-[min(94vw,1100px)] flex-col items-center px-4 pb-8 pt-5 text-center md:absolute md:left-1/2 md:top-[clamp(90px,11svh,145px)] md:-translate-x-1/2 md:px-6 md:pb-0 md:pt-0"
+        style={{
+          willChange: 'transform, opacity, filter',
+          textShadow: '0 3px 24px rgba(0, 0, 0, 0.9)',
+        }}
+      >
+        <HeroCopy />
       </div>
 
-      <div className="absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-[5] -translate-x-1/2">
+      <div className="absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-[5] hidden -translate-x-1/2 md:block">
         <div ref={cueRef} aria-hidden="true">
           <div className="flex h-10 w-6 items-start justify-center rounded-full border border-white/30 bg-black/10 p-1.5 backdrop-blur-sm">
             <span className="h-2 w-1 animate-bounce rounded-full bg-brand-500" />
