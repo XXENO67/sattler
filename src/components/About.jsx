@@ -9,7 +9,7 @@ export default function About() {
   return (
     <section id="ueber-uns" className="relative overflow-hidden scroll-mt-24 bg-ink-900 py-16 sm:py-24 lg:py-32">
       <img
-        src="/brand/logo.png"
+        src="/sattler/brand/logo.png"
         alt=""
         aria-hidden="true"
         loading="lazy"
@@ -56,7 +56,7 @@ export default function About() {
           className="overflow-hidden rounded-3xl border border-white/10"
         >
           <img
-            src="/brand/slide1.jpg"
+            src="/sattler/brand/slide1.jpg"
             alt="Dellentechnik Sattler vor dem Firmenfahrzeug"
             width={1200}
             height={800}

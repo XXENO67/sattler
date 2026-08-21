@@ -2,15 +2,15 @@ import { motion, useReducedMotion } from 'framer-motion'
 
 const SHOTS = [
   {
-    src: '/brand/slide2.jpg',
+    src: '/sattler/brand/slide2.jpg',
     alt: 'Präzise Klebe-Zieh-Technik auf glänzend schwarzem Lack',
   },
   {
-    src: '/brand/slide3.jpg',
+    src: '/sattler/brand/slide3.jpg',
     alt: 'Drücktechnik an der Fahrzeugtür im direkten Einsatz',
   },
   {
-    src: '/brand/schlagmethode.jpg',
+    src: '/sattler/brand/schlagmethode.jpg',
     alt: 'Schlagmethode am Fahrzeugdach',
   },
 ]
