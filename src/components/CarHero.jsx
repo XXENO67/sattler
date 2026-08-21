@@ -14,7 +14,7 @@ const STUDIO = '#080808'
 
 const frameUrl = (frame) => {
   const number = String(frame + 1).padStart(4, '0')
-  return `/frames/frame_${number}.png`
+  return `/frames/frame_${number}.webp`
 }
 
 function drawCover(canvas, image, mode) {
@@ -85,7 +85,10 @@ export default function CarHero() {
     }
 
     const trimCache = () => {
-      const maxEntries = mode === 'mobile' ? 28 : 24
+      // WebP frames decode fast, so we can keep a wider resident window without
+      // reintroducing decode stalls. Kept bounded because each decoded frame is
+      // ~8 MB in memory regardless of the small file size.
+      const maxEntries = mode === 'mobile' ? 32 : 44
       if (cache.size <= maxEntries) return
 
       const byDistance = [...cache.keys()].sort(
@@ -231,7 +234,14 @@ export default function CarHero() {
       if (disposed) return
       framesReadyRef.current = true
       startIntroRef.current()
-      preloadRange(INTRO_END_FRAME + 1, PRIORITY_PRELOAD_END, 3)
+      // Warm the priority window first, then quietly pull the entire remaining
+      // sequence into the browser's HTTP cache. Frames evicted from the resident
+      // Map still stay cached on disk, so any later cache-miss during a fast
+      // scroll is served instantly and only needs a quick WebP decode.
+      preloadRange(INTRO_END_FRAME + 1, PRIORITY_PRELOAD_END, 3).then(() => {
+        if (disposed) return
+        preloadRange(PRIORITY_PRELOAD_END + 1, FRAME_COUNT - 1, 2)
+      })
     })
 
     window.addEventListener('resize', handleResize, { passive: true })
